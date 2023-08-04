@@ -1,0 +1,44 @@
+# .gitignore
+
+# Dépendances
+/node_modules
+
+# Fichiers de logs
+logs
+*.log
+npm-debug.log*
+
+# Fichiers runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Répertoire de build
+/.next
+
+# Environnements de développement
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Fichiers npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock
+/package-lock.json
+
+# Fichiers de l'éditeur
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignore Mac system files
+.DS_Store
