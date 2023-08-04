@@ -23,12 +23,20 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
+import CustomAvatar from 'src/@core/components/mui/avatar'
+
+// ** Context
+import { useAuth } from 'src/hooks/useAuth'
+
+// ** Utils Import
+import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Third Party Imports
 import { useForm, Controller } from 'react-hook-form'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { use } from 'i18next'
 
 const initialData = {
   state: '',
@@ -115,6 +123,9 @@ const TabAccount = () => {
     setFormData({ ...formData, [field]: value })
   }
 
+  const { user } = useAuth()
+
+
   return (
     <Grid container spacing={6}>
       {/* Account Details Card */}
@@ -124,7 +135,13 @@ const TabAccount = () => {
           <form>
             <CardContent sx={{ pt: 0 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ImgStyled src={imgSrc} alt='Profile Pic' />
+                <CustomAvatar
+                  skin='light'
+                  color='primary'
+                  sx={{ width: 100, height: 100, marginRight: 8 }}
+                >
+                  {getInitials(`${user.firstName} ${user.lastName}`)}
+                </CustomAvatar>
                 <div>
                   <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
                     Upload New Photo
@@ -151,8 +168,7 @@ const TabAccount = () => {
                   <CustomTextField
                     fullWidth
                     label='First Name'
-                    placeholder='John'
-                    value={formData.firstName}
+                    value={user.firstName}
                     onChange={e => handleFormChange('firstName', e.target.value)}
                   />
                 </Grid>
@@ -161,7 +177,7 @@ const TabAccount = () => {
                     fullWidth
                     label='Last Name'
                     placeholder='Doe'
-                    value={formData.lastName}
+                    value={user.lastName}
                     onChange={e => handleFormChange('lastName', e.target.value)}
                   />
                 </Grid>
@@ -170,7 +186,7 @@ const TabAccount = () => {
                     fullWidth
                     type='email'
                     label='Email'
-                    value={formData.email}
+                    value={user.email}
                     placeholder='john.doe@example.com'
                     onChange={e => handleFormChange('email', e.target.value)}
                   />
@@ -180,7 +196,7 @@ const TabAccount = () => {
                     fullWidth
                     label='Organization'
                     placeholder='Pixinvent'
-                    value={formData.organization}
+                    value={user.entreprise.name}
                     onChange={e => handleFormChange('organization', e.target.value)}
                   />
                 </Grid>
@@ -189,10 +205,10 @@ const TabAccount = () => {
                     fullWidth
                     type='number'
                     label='Phone Number'
-                    value={formData.number}
+                    value={user.umber}
                     placeholder='202 555 0111'
                     onChange={e => handleFormChange('number', e.target.value)}
-                    InputProps={{ startAdornment: <InputAdornment position='start'>US (+1)</InputAdornment> }}
+                    InputProps={{ startAdornment: <InputAdornment position='start'></InputAdornment> }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -239,71 +255,6 @@ const TabAccount = () => {
                     <MenuItem value='france'>France</MenuItem>
                     <MenuItem value='united-kingdom'>United Kingdom</MenuItem>
                     <MenuItem value='united-states'>United States</MenuItem>
-                  </CustomTextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    select
-                    fullWidth
-                    defaultValue=''
-                    label='Language'
-                    SelectProps={{
-                      value: formData.language,
-                      onChange: e => handleFormChange('language', e.target.value)
-                    }}
-                  >
-                    <MenuItem value='arabic'>Arabic</MenuItem>
-                    <MenuItem value='english'>English</MenuItem>
-                    <MenuItem value='french'>French</MenuItem>
-                    <MenuItem value='german'>German</MenuItem>
-                    <MenuItem value='portuguese'>Portuguese</MenuItem>
-                  </CustomTextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    select
-                    fullWidth
-                    defaultValue=''
-                    label='Timezone'
-                    SelectProps={{
-                      value: formData.timezone,
-                      onChange: e => handleFormChange('timezone', e.target.value)
-                    }}
-                  >
-                    <MenuItem value='gmt-12'>(GMT-12:00) International Date Line West</MenuItem>
-                    <MenuItem value='gmt-11'>(GMT-11:00) Midway Island, Samoa</MenuItem>
-                    <MenuItem value='gmt-10'>(GMT-10:00) Hawaii</MenuItem>
-                    <MenuItem value='gmt-09'>(GMT-09:00) Alaska</MenuItem>
-                    <MenuItem value='gmt-08'>(GMT-08:00) Pacific Time (US & Canada)</MenuItem>
-                    <MenuItem value='gmt-08-baja'>(GMT-08:00) Tijuana, Baja California</MenuItem>
-                    <MenuItem value='gmt-07'>(GMT-07:00) Chihuahua, La Paz, Mazatlan</MenuItem>
-                    <MenuItem value='gmt-07-mt'>(GMT-07:00) Mountain Time (US & Canada)</MenuItem>
-                    <MenuItem value='gmt-06'>(GMT-06:00) Central America</MenuItem>
-                    <MenuItem value='gmt-06-ct'>(GMT-06:00) Central Time (US & Canada)</MenuItem>
-                    <MenuItem value='gmt-06-mc'>(GMT-06:00) Guadalajara, Mexico City, Monterrey</MenuItem>
-                    <MenuItem value='gmt-06-sk'>(GMT-06:00) Saskatchewan</MenuItem>
-                    <MenuItem value='gmt-05'>(GMT-05:00) Bogota, Lima, Quito, Rio Branco</MenuItem>
-                    <MenuItem value='gmt-05-et'>(GMT-05:00) Eastern Time (US & Canada)</MenuItem>
-                    <MenuItem value='gmt-05-ind'>(GMT-05:00) Indiana (East)</MenuItem>
-                    <MenuItem value='gmt-04'>(GMT-04:00) Atlantic Time (Canada)</MenuItem>
-                    <MenuItem value='gmt-04-clp'>(GMT-04:00) Caracas, La Paz</MenuItem>
-                  </CustomTextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    select
-                    fullWidth
-                    defaultValue=''
-                    label='Currency'
-                    SelectProps={{
-                      value: formData.currency,
-                      onChange: e => handleFormChange('currency', e.target.value)
-                    }}
-                  >
-                    <MenuItem value='usd'>USD</MenuItem>
-                    <MenuItem value='eur'>EUR</MenuItem>
-                    <MenuItem value='pound'>Pound</MenuItem>
-                    <MenuItem value='bitcoin'>Bitcoin</MenuItem>
                   </CustomTextField>
                 </Grid>
 

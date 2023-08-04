@@ -85,7 +85,7 @@ const shortcuts = [
   {
     subtitle: 'CRM',
     title: 'Dashboard',
-    url: '/dashboards/crm',
+    url: '/s/crm',
     icon: 'tabler:device-analytics'
   },
   {

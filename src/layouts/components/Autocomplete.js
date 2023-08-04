@@ -38,7 +38,7 @@ const defaultSuggestionsData = [
       {
         icon: 'tabler:shopping-cart',
         suggestion: 'app',
-        link: '/dashboard'
+        link: '/'
       },
       {
         icon: 'tabler:users',
@@ -226,7 +226,7 @@ const NoResult = ({ value, setOpenDialog }) => {
         <ListItem sx={{ py: 2 }} disablePadding onClick={() => setOpenDialog(false)}>
           <Box
             component={Link}
-            href='/dashboard'
+            href='/'
             sx={{
               display: 'flex',
               alignItems: 'center',

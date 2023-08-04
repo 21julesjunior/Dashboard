@@ -162,7 +162,7 @@ const LoginPage = () => {
       updateUser(userData);
       auth.setLoading(false);
 
-      router.push('/dashboard');
+      router.push('/');
     } catch (error) {
       console.error('Login error:', error);
 

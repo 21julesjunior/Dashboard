@@ -21,8 +21,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Hooks
 import { useSettings } from 'src/@core/hooks/useSettings'
-import { useAuth } from 'src/hooks/useAuth'
-
 
 // ** Styled Components
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -44,17 +42,17 @@ const Register = () => {
   })
 
   // ** Hooks
-  const { settings, loginUser } = useAuth()
+  const { settings } = useSettings()
 
   // ** Vars
+  const { skin } = settings
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
 
   const router = useRouter();
 
 
   // ** Handle Form Submit
-   // ** Handle Form Submit
-   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -63,40 +61,8 @@ const Register = () => {
 
       // Vérifier si la création de compte a réussi
       if (response.status === 201) {
-        // Essayez de vous connecter avec les mêmes informations d'identification
-        try {
-          const loginResponse = await axios.post('https://dyinvoice-backend-production.up.railway.app/v1/user/login', {
-            email: formData.email,
-            password: formData.password
-          });
-
-          const { accessToken } = loginResponse.data;
-
-          if (!accessToken) {
-            console.error('Login API did not return a token');
-            return;
-          }
-
-          window.localStorage.setItem('token', accessToken);
-
-          // Now make a request to the API to get the complete user info
-          const userResponse = await axios.get('https://dyinvoice-backend-production.up.railway.app/v1/user', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`
-            }
-          });
-
-          const userData = userResponse.data;
-
-          // Update the user in the auth context.
-          loginUser(userData);
-
-          // Rediriger vers la page "/dashboard" après une inscription réussie
-          router.push('/dashboard');
-        } catch (loginError) {
-          console.error('Automatic login after registration failed:', loginError);
-          // Gérer l'échec du login automatique ici
-        }
+        // Rediriger vers la page "/" après une inscription réussie
+        router.push('/');
       } else {
         // Afficher un message d'erreur ou effectuer d'autres actions en cas d'échec de l'inscription
         console.error('Registration failed:', response.data);
@@ -196,7 +162,7 @@ const Register = () => {
                 label='Entreprise'
                 placeholder=''
                 name='entreprise'
-                value={formData.entreprise}
+                value={formData.entreprise.name}
                 onChange={handleChange}
               />
               <CustomTextField

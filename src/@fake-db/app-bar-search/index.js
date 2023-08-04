@@ -4,7 +4,7 @@ import mock from 'src/@fake-db/mock'
 const searchData = [
   {
     id: 1,
-    url: '/dashboard',
+    url: '/',
     icon: 'tabler:shopping-cart',
     title: 'eCommerce Dashboard',
     category: 'dashboards'

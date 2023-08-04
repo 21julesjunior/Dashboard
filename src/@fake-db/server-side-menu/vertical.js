@@ -5,7 +5,7 @@ const navigation = [
   {
     title: 'Dashboard',
     icon: 'tabler:smart-home',
-    path: '/dashboard'
+    path: '/'
 
   },
   {
@@ -56,28 +56,7 @@ const navigation = [
         title: 'List',
         path: '/apps/user/list'
       },
-      {
-        title: 'View',
-        children: [
-          {
-            title: 'Account',
-            path: '/apps/user/view/account'
-          },
 
-          {
-            title: 'Entreprise',
-            path: '/apps/user/view/entreprise'
-          },
-          {
-            title: 'Notifications',
-            path: '/apps/user/view/notification'
-          },
-          {
-            title: 'Connection',
-            path: '/apps/user/view/connection'
-          }
-        ]
-      }
     ]
   },
   {

@@ -11,13 +11,13 @@ const Dashboard = () => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-      <Grid item xs={12}>
+        <Grid item xs={12}>
           <Statistics />
-        </Grid> 
+        </Grid>
 
-      <Grid item xs={12}>
+        <Grid item xs={12}>
           <InvoiceTable />
-        </Grid> 
+        </Grid>
       </Grid>
     </ApexChartWrapper>
 

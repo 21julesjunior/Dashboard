@@ -3,7 +3,7 @@ const navigation = () => {
     {
       title: 'Dashboard',
       icon: 'tabler:smart-home',
-      path: '/dashboard'
+      path: '/'
 
     },
     {
