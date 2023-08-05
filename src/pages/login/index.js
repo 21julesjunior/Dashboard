@@ -182,8 +182,8 @@ const LoginPage = () => {
 
       // If the error response status is 401, handle the error
       if (error.response && error.response.status === 401) {
-        setError("email", { type: "manual", message: "Invalid credentials" });
-        setError("password", { type: "manual", message: "Invalid credentials" });
+        setError("email", { type: "manual", message: "Email ou mot de passe incorrect" });
+        setError("password", { type: "manual" });
       }
 
       setAlert({ message: "Log in failed", severity: "error" });

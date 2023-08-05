@@ -39,8 +39,8 @@ import { fetchData, deleteUser } from 'src/store/apps/user'
 import axios from 'axios'
 
 // ** Custom Table Components Imports
-import TableHeader from 'src/views/apps/user/list2/TableHeader'
-import AddUserDrawer from 'src/views/apps/user/list2/AddUserDrawer'
+import TableHeader from 'src/views/apps/products/list/ProductTableHeader'
+import AddUserDrawer from 'src/views/apps/products/list/AddProductDrawer'
 
 // ** renders client column
 const userRoleObj = {
@@ -141,8 +141,8 @@ const columns = [
   {
     flex: 0.25,
     minWidth: 280,
-    field: 'fullName',
-    headerName: 'User',
+    field: 'Name',
+    headerName: 'Product',
     renderCell: ({ row }) => {
       const { fullName, email } = row
 
@@ -173,9 +173,9 @@ const columns = [
   },
   {
     flex: 0.15,
-    field: 'role',
+    field: 'description',
     minWidth: 170,
-    headerName: 'Role',
+    headerName: 'Description',
     renderCell: ({ row }) => {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -196,8 +196,8 @@ const columns = [
   {
     flex: 0.1,
     minWidth: 110,
-    field: 'status',
-    headerName: 'Status',
+    field: 'price',
+    headerName: 'Price',
     renderCell: ({ row }) => {
       return (
         <CustomChip
@@ -275,46 +275,8 @@ const UserList = ({ apiData }) => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='' />
-          <CardContent>
-            <Grid container spacing={6}>
-              <Grid item sm={4} xs={12}>
-                <CustomTextField
-                  select
-                  fullWidth
-                  defaultValue='Select Role'
-                  SelectProps={{
-                    value: role,
-                    displayEmpty: true,
-                    onChange: e => handleRoleChange(e)
-                  }}
-                >
-                  <MenuItem value=''>Select Role</MenuItem>
-                  <MenuItem value='admin'>Admin</MenuItem>
-                  <MenuItem value='invité'>Invité</MenuItem>
+         
 
-                </CustomTextField>
-              </Grid>
-
-              <Grid item sm={4} xs={12}>
-                <CustomTextField
-                  select
-                  fullWidth
-                  defaultValue='Select Status'
-                  SelectProps={{
-                    value: status,
-                    displayEmpty: true,
-                    onChange: e => handleStatusChange(e)
-                  }}
-                >
-                  <MenuItem value=''>Select Status</MenuItem>
-                  <MenuItem value='pending'>Pending</MenuItem>
-                  <MenuItem value='active'>Active</MenuItem>
-                  <MenuItem value='inactive'>Inactive</MenuItem>
-                </CustomTextField>
-              </Grid>
-            </Grid>
-          </CardContent>
           <Divider sx={{ m: '0 !important' }} />
           <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
           <DataGrid
@@ -335,15 +297,5 @@ const UserList = ({ apiData }) => {
   )
 }
 
-export const getStaticProps = async () => {
-  const res = await axios.get('/cards/statistics')
-  const apiData = res.data
-
-  return {
-    props: {
-      apiData
-    }
-  }
-}
 
 export default UserList

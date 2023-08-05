@@ -7,14 +7,19 @@ const navigation = () => {
 
     },
     {
-      title: 'Invoice',
+      title: 'Invoices',
       icon: 'tabler:file-dollar',
       path: '/apps/invoice/list'
     },
     {
-      title: 'User',
+      title: 'Users',
       icon: 'tabler:user',
       path: '/apps/user/list'
+    },
+    {
+      title: 'Products',
+      icon: 'tabler:stack',
+      path: '/apps/products/list'
     },
     {
       title: 'Roles & Permissions',
