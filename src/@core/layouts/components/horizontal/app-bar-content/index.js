@@ -31,7 +31,7 @@ const AppBarContent = props => {
         <LinkStyled href='/'>
           
           <Typography variant='h4' sx={{ ml: 2.5, fontWeight: 700, lineHeight: '24px' }}>
-            {themeConfig.templateName}
+            {themeConfig.appName}
           </Typography>
         </LinkStyled>
       )}

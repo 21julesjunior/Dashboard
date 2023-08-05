@@ -1,17 +1,19 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import axios from 'axios'
+import { AuthContext } from 'src/context/AuthContext'
 
 // ** Next Import
 import Link from 'next/link'
-
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -28,8 +30,11 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }))
 
-
 const Register = () => {
+
+  // Renommez "setUser" en "updateUser" lors de la déstructuration
+  const { setUser: updateUser, setLoading } = useContext(AuthContext)
+  
   // ** State
   const [formData, setFormData] = useState({
     firstName: '',
@@ -48,32 +53,64 @@ const Register = () => {
   const { skin } = settings
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
 
-  const router = useRouter();
-
+  const router = useRouter()
+  const theme = useTheme()
+  const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
   // ** Handle Form Submit
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      const response = await axios.post('https://dyinvoice-backend-production.up.railway.app/v1/user/register', formData);
-      console.log('User created:', response.data);
+      const registerResponse = await axios.post('https://dyinvoice-backend-production.up.railway.app/v1/user/register', formData)
+      console.log('User created:', registerResponse.data)
 
-      // Vérifier si la création de compte a réussi
-      if (response.status === 201) {
-        // Rediriger vers la page "/" après une inscription réussie
-        router.push('/');
+      // Verify if the account creation was successful
+      if (registerResponse.status === 201) {
+        // Automatically log the user in after successful registration
+        try {
+          const loginResponse = await axios.post('https://dyinvoice-backend-production.up.railway.app/v1/user/login', {
+            email: formData.email,
+            password: formData.password
+          })
+
+          const { accessToken } = loginResponse.data
+
+          if (!accessToken) {
+            console.error('Login API did not return a token')
+            return
+          }
+
+          window.localStorage.setItem('token', accessToken)
+
+          // Now make a request to the API to get the complete user info
+          const userResponse = await axios.get('https://dyinvoice-backend-production.up.railway.app/v1/user', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          })
+
+          const userData = userResponse.data
+
+          // Update the user in the auth context
+          updateUser(userData)
+          setLoading(false)
+
+          // Redirect to the home page "/" after successful login
+          router.push('/')
+        } catch (error) {
+          console.error('Login error:', error)
+          // Handle login error here
+        }
       } else {
-        // Afficher un message d'erreur ou effectuer d'autres actions en cas d'échec de l'inscription
-        console.error('Registration failed:', response.data);
+        console.error('Registration failed:', registerResponse.data)
+        // Display an error message or perform other actions when registration fails
       }
     } catch (error) {
-      console.error('Registration failed:', error);
-      // Afficher un message d'erreur ou effectuer d'autres actions en cas d'échec de l'inscription
+      console.error('Registration failed:', error)
+      // Display an error message or perform other actions when registration fails
     }
-  };
-
-
+  }
 
   // ** Handle Form Change
   const handleChange = (e) => {
@@ -82,8 +119,26 @@ const Register = () => {
       [e.target.name]: e.target.value
     }))
   }
+  
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
+      {!hidden ? (
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            position: 'relative',
+            alignItems: 'center',
+            borderRadius: '20px',
+            justifyContent: 'center',
+            backgroundColor: 'customColors.bodyBg',
+            margin: theme => theme.spacing(8, 0, 8, 8)
+          }}
+        >
+          <img src='/images/banners/login-banner.jpg' width="100%" height="100%" />
+
+        </Box>
+      ) : null}
       <RightWrapper>
         <Box
           sx={{
@@ -169,7 +224,7 @@ const Register = () => {
                 autoFocus
                 fullWidth
                 sx={{ mb: 4 }}
-                label='country'
+                label='Country'
                 placeholder=''
                 name='country'
                 value={formData.country}

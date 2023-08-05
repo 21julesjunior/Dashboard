@@ -75,9 +75,9 @@ const VerticalNavHeader = props => {
         userNavMenuBranding(props)
       ) : (
         <LinkStyled href='/'>
-         
+         <img src='/images/favicon.png' width="30" />
           <HeaderTitle variant='h4' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2.5 }) }}>
-            {themeConfig.templateName}
+            {themeConfig.appName}
           </HeaderTitle>
         </LinkStyled>
       )}

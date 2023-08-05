@@ -31,7 +31,7 @@ const FooterContent = () => {
         {`© ${new Date().getFullYear()}, Made by `}
 
         <Typography sx={{ ml: 1 }} target='_blank' href='https://pixinvent.com' component={StyledCompanyName}>
-          Digital Youth Services
+          JTex
         </Typography>
       </Typography>
 

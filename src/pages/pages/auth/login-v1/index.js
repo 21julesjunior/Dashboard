@@ -79,7 +79,7 @@ const LoginV1 = () => {
             </Box>
             <Box sx={{ mb: 6 }}>
               <Typography variant='h4' sx={{ mb: 1.5 }}>
-                {`Welcome to ${themeConfig.templateName}! `}
+                {`Welcome to ${themeConfig.appName}! `}
               </Typography>
               <Typography sx={{ color: 'text.secondary' }}>
                 Please sign-in to your account and start the adventure

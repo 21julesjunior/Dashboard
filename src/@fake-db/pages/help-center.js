@@ -310,7 +310,7 @@ const data = {
             {
               slug: 'how-to-detect-fake-email',
               title: 'How to detect fake email?',
-              content: `<p>We will only send you emails from @${themeConfig.templateName}.com or @t.${themeConfig.templateName}.com. However, some people may receive fake or suspicious emails that look like they were sent by US. These emails might include malicious attachments or links to spam or phishing websites. Please know that we will never send emails with attachments or request your password by email.</p><p>We will only send you emails from @${themeConfig.templateName}.com or @t.${themeConfig.templateName}.com. However, some people may receive fake or suspicious emails that look like they were sent by US. These emails might include malicious attachments or links to spam or phishing websites. Please know that we will never send emails with attachments or request your password by email.</p>`
+              content: `<p>We will only send you emails from @${themeConfig.appName}.com or @t.${themeConfig.appName}.com. However, some people may receive fake or suspicious emails that look like they were sent by US. These emails might include malicious attachments or links to spam or phishing websites. Please know that we will never send emails with attachments or request your password by email.</p><p>We will only send you emails from @${themeConfig.appName}.com or @t.${themeConfig.appName}.com. However, some people may receive fake or suspicious emails that look like they were sent by US. These emails might include malicious attachments or links to spam or phishing websites. Please know that we will never send emails with attachments or request your password by email.</p>`
             },
             {
               slug: 'how-do-I-report-an-impersonation-violation',
@@ -392,7 +392,7 @@ const data = {
             {
               slug: 'does-we-have-access-to-user-generated-photos-or-videos',
               title: 'Does we have access to user-generated photos or videos?',
-              content: `<p>We provide photo hosting for some image uploads (i.e., pic.${themeConfig.templateName}.com images) as well as account profile photos, and header photos. However, We are not the sole photo provider for images that may appear on the platform. More information about posting photos on platform.</p><p>We provide photo hosting for some image uploads (i.e., pic.${themeConfig.templateName}.com images) as well as account profile photos, and header photos. However, We are not the sole photo provider for images that may appear on the platform. More information about posting photos on platform.</p>`
+              content: `<p>We provide photo hosting for some image uploads (i.e., pic.${themeConfig.appName}.com images) as well as account profile photos, and header photos. However, We are not the sole photo provider for images that may appear on the platform. More information about posting photos on platform.</p><p>We provide photo hosting for some image uploads (i.e., pic.${themeConfig.appName}.com images) as well as account profile photos, and header photos. However, We are not the sole photo provider for images that may appear on the platform. More information about posting photos on platform.</p>`
             },
             {
               slug: 'data-controller',

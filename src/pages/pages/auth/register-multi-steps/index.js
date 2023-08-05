@@ -88,7 +88,7 @@ const RegisterMultiSteps = () => {
               />
             </svg>
             <Typography sx={{ ml: 2.5, fontWeight: 600, lineHeight: '24px', fontSize: '1.375rem' }}>
-              {themeConfig.templateName}
+              {themeConfig.appName}
             </Typography>
           </Box>
           <RegisterMultiStepsIllustration

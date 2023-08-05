@@ -3,15 +3,11 @@ import axios from 'axios';
 import { useState } from 'react'
 import { useRouter } from 'next/router';
 
-import jwt from 'jsonwebtoken';
-
 // ** Next Imports
 import Link from 'next/link'
 
 // ** MUI Components
-import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
 import Checkbox from '@mui/material/Checkbox'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
@@ -192,8 +188,8 @@ const LoginPage = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          {/* <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}-${theme.palette.mode}.png`} /> */}
-          <FooterIllustrationsV2 />
+          <img src='/images/banners/login-banner.jpg' width="100%" height="100%"/>
+
         </Box>
       ) : null}
       <RightWrapper>

@@ -107,7 +107,7 @@ const ResetPasswordV1 = () => {
                 />
               </svg>
               <Typography variant='h3' sx={{ ml: 2.5, fontWeight: 700 }}>
-                {themeConfig.templateName}
+                {themeConfig.appName}
               </Typography>
             </Box>
             <Box sx={{ mb: 6 }}>
