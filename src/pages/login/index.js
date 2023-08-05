@@ -1,8 +1,9 @@
 // ** React Imports
 import axios from 'axios';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
-
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 // ** Next Imports
 import Link from 'next/link'
 
@@ -94,6 +95,9 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const { user, setUser, setLoading } = useAuth()
+
 
   // ** Hooks
   const auth = useAuth()
@@ -116,47 +120,61 @@ const LoginPage = () => {
     resolver: yupResolver(schema)
   })
 
+  useEffect(() => {
+    if (user) {
+      router.push('/') // Redirige vers la page d'accueil si l'utilisateur est déjà connecté
+    }
+  }, [user, router])
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
 
   const updateUser = (newUser) => {
-    auth.setUser(newUser);  // <--- Use the setUser function from the auth hook here
-
+    setUser(newUser);
+    setLoading(false);
     if (typeof window !== "undefined") {
       window.localStorage.setItem('userData', JSON.stringify(newUser));
     }
   };
 
+  const [alert, setAlert] = useState({ message: "", severity: "success" });
+
   const onSubmit = async (values) => {
     const { email, password } = values;
-
+  
     try {
       const response = await axios.post('https://dyinvoice-backend-production.up.railway.app/v1/user/login', {
         email,
         password
       });
-
+  
       const { accessToken } = response.data;
-
+  
       if (!accessToken) {
         console.error('Login API did not return a token');
-
         return;
       }
-
+  
       window.localStorage.setItem('token', accessToken);
-
-      // Now make a request to the API to get the complete user info
+  
       const userResponse = await axios.get('https://dyinvoice-backend-production.up.railway.app/v1/user', {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
       });
-
+  
       const userData = userResponse.data;
-
-      // Update the user in the auth context.
+  
       updateUser(userData);
       auth.setLoading(false);
+      // Ajouter un flag dans le localstorage pour afficher le message de succès dans la page du tableau de bord.
+      window.localStorage.setItem('showSuccessSnackbar', 'true');
+      window.localStorage.setItem('justLoggedIn', 'true');
 
       router.push('/');
     } catch (error) {
@@ -167,6 +185,9 @@ const LoginPage = () => {
         setError("email", { type: "manual", message: "Invalid credentials" });
         setError("password", { type: "manual", message: "Invalid credentials" });
       }
+
+      setAlert({ message: "Log in failed", severity: "error" });
+      setOpen(true);
     }
   };
 
@@ -188,7 +209,7 @@ const LoginPage = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          <img src='/images/banners/login-banner.jpg' width="100%" height="100%"/>
+          <img src='/images/banners/login-banner.jpg' width="100%" height="100%" />
 
         </Box>
       ) : null}
@@ -300,6 +321,19 @@ const LoginPage = () => {
                   Create an account
                 </Typography>
               </Box>
+
+              <Snackbar
+                open={open}
+                autoHideDuration={5000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              >
+                <MuiAlert onClose={handleClose} severity={alert.severity} variant="filled">
+                  {alert.message}
+                </MuiAlert>
+              </Snackbar>
+
+
 
             </form>
           </Box>

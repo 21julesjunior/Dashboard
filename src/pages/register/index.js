@@ -32,6 +32,12 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 const Register = () => {
 
+  useEffect(() => {
+    if (user) {
+      router.push('/') // Redirige vers la page d'accueil si l'utilisateur est déjà connecté
+    }
+  }, [user, router])
+
   // Renommez "setUser" en "updateUser" lors de la déstructuration
   const { setUser: updateUser, setLoading } = useContext(AuthContext)
   
@@ -119,7 +125,7 @@ const Register = () => {
       [e.target.name]: e.target.value
     }))
   }
-  
+
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
       {!hidden ? (
