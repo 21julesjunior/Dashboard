@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import axios from 'axios'
 import { AuthContext } from 'src/context/AuthContext'
 import Snackbar from '@mui/material/Snackbar';
@@ -49,7 +49,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 const Register = () => {
 
-  // Rename "setUser" to "updateUser" when destructuring
+  // Renommez "setUser" en "updateUser" lors de la déstructuration
   const { setUser: updateUser, setLoading } = useContext(AuthContext)
 
   // ** State
@@ -63,27 +63,6 @@ const Register = () => {
     country: ''
   })
 
-  const [passwordCriteria, setPasswordCriteria] = useState({
-    length: false,
-    symbol: false,
-    number: false,
-  })
-
-  // Calculate password strength
-  const passwordStrength = Object.values(passwordCriteria).filter(Boolean).length
-
-  useEffect(() => {
-    const checkPassword = (password) => {
-      setPasswordCriteria({
-        length: password.length >= 8,
-        symbol: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(password),
-        number: /\d/.test(password),
-      })
-    }
-
-    checkPassword(formData.password)
-  }, [formData.password])
-
   // ** Hooks
   const { settings } = useSettings()
 
@@ -96,6 +75,7 @@ const Register = () => {
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
   const [alert, setAlert] = useState({ open: true, message: 'Test alert message', severity: 'success' });
+
 
   // ** Handle Form Submit
   // ** Handle Form Submit
@@ -112,18 +92,12 @@ const Register = () => {
     }
     if (!isValidEmail(formData.email)) {
       console.error('Invalid email format')
-      setAlert({ open: true, message: 'Invalid email format.', severity: 'error' });
+      setAlert({ open: true, message: 'Le format de l\'email est invalide.', severity: 'error' });
       return
     }
     if (!isValidPhoneNumber(formData.phoneNumber)) {
       console.error('Invalid phone number format')
-      setAlert({ open: true, message: 'Invalid phone number format.', severity: 'error' });
-      return
-    }
-
-    if (!passwordCriteria.length || !passwordCriteria.symbol || !passwordCriteria.number) {
-      console.error('Password does not meet criteria')
-      setAlert({ open: true, message: 'Password does not meet criteria.', severity: 'error' });
+      setAlert({ open: true, message: 'Le format du numéro de téléphone est invalide.', severity: 'error' });
       return
     }
 
@@ -171,7 +145,7 @@ const Register = () => {
         }
       } else {
         console.error('Registration failed:', registerResponse.data)
-        setAlert({ open: true, message: 'Une erreur s\'est produite lors de l\'inscription. Veuillez réessayer.', severity: 'error' });
+        setAlert({ open: true, message: 'Inscription échouée. Veuillez réessayer.', severity: 'error' });
       }
     } catch (error) {
       console.error('Registration failed:', error)
@@ -179,158 +153,177 @@ const Register = () => {
     }
   }
 
-  // ** Handle Input Change
-  const handleChange = e => {
-    const { name, value } = e.target
-    setFormData(prevState => ({ ...prevState, [name]: value }))
+
+  // ** Handle Form Change
+  const handleChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value
+    }))
   }
 
-  const handleClose = () => {
-    setAlert({ ...alert, open: false });
-  };
+  const [passwordRules, setPasswordRules] = useState({
+    minLength: false,
+    containsSymbol: false,
+    containsNumber: false,
+  });
+  
 
   return (
-   
-      <Box
-        sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: {
-            xs: '50px 0',
-            md: '0'
-          },
-          backgroundColor: theme.palette.mode === 'dark' ? '#000' : '#F2F2F2'
-        }}
-      >
+    <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
+      {!hidden ? (
         <Box
           sx={{
-            backgroundColor: theme.palette.mode === 'dark' ? '#141414' : '#fff',
-            borderRadius: '12px',
-            width: {
-              xs: '100%',
-              sm: '80%',
-              md: '60%',
-              lg: '50%',
-              xl: '40%'
-            },
-            p: '50px 30px',
+            flex: 1,
             display: 'flex',
-            flexDirection: 'column',
+            position: 'relative',
+            alignItems: 'center',
+            borderRadius: '20px',
             justifyContent: 'center',
-            position: 'relative'
+            backgroundColor: 'customColors.bodyBg',
+            margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          <Box
-            component="img"
-            src={`/static/images/illustrations/${imageSource}.svg`}
-            sx={{
-              position: 'absolute',
-              top: '-30px',
-              right: '-30px',
-              maxHeight: '270px',
-              maxWidth: '237px',
-              display: {
-                xs: 'none',
-                md: 'block'
-              }
-            }}
-            alt="Auth illustration"
-          />
-          <Typography variant="h3" gutterBottom>
-            Create Account
-          </Typography>
-          <Typography sx={{ color: 'text.secondary', pb: '32px' }} variant="body2">
-            Already have an account?{' '}
-            <LinkStyled href="/pages/authentication/login-v2">
-              <a>Sign in</a>
-            </LinkStyled>
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <CustomTextField
-              fullWidth
-              label='First Name'
-              id='auth-register-v2-first-name'
-              sx={{ mb: 3 }}
-              placeholder='John'
-              name='firstName'
-              value={formData.firstName}
-              onChange={handleChange}
-            />
-            <CustomTextField
-              fullWidth
-              label='Last Name'
-              id='auth-register-v2-last-name'
-              sx={{ mb: 3 }}
-              placeholder='Doe'
-              name='lastName'
-              value={formData.lastName}
-              onChange={handleChange}
-            />
-            <CustomTextField
-              fullWidth
-              label='Email'
-              id='auth-register-v2-email'
-              sx={{ mb: 3 }}
-              placeholder='john.doe@example.com'
-              name='email'
-              value={formData.email}
-              onChange={handleChange}
-            />
-            <CustomTextField
-              fullWidth
-              label='Phone Number'
-              id='auth-register-v2-phone-number'
-              sx={{ mb: 3 }}
-              placeholder='+1 202-555-0135'
-              name='phoneNumber'
-              value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-            <CustomTextField
-              fullWidth
-              label='Password'
-              id='auth-register-v2-password'
-              type='password'
-              sx={{ mb: 3 }}
-              placeholder='********'
-              name='password'
-              value={formData.password}
-              onChange={handleChange}
-            />
-            <Typography variant="body2">
-              Password must contain at least:
-            </Typography>
-            <Typography variant="body2" style={{ color: passwordCriteria.length ? 'green' : 'grey' }}>
-              {passwordCriteria.length ? "✓" : "✘"} 8 characters
-            </Typography>
-            <Typography variant="body2" style={{ color: passwordCriteria.symbol ? 'green' : 'grey' }}>
-              {passwordCriteria.symbol ? "✓" : "✘"} One symbol (@, $, !, %, *, ?, &, etc.)
-            </Typography>
-            <Typography variant="body2" style={{ color: passwordCriteria.number ? 'green' : 'grey' }}>
-              {passwordCriteria.number ? "✓" : "✘"} One number
-            </Typography>
-            <BorderLinearProgress 
-              variant="determinate" 
-              value={passwordStrength * 33} 
-              style={{
-                backgroundColor: passwordStrength === 3 ? 'green' : 
-                  passwordStrength === 2 ? 'orange' : 'red',
-              }}
-            />
-            <Button type='submit' fullWidth variant='contained' sx={{ mt: 3 }}>
-              Sign up
-            </Button>
-          </form>
-          <Snackbar open={alert.open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity={alert.severity} sx={{ width: '100%' }}>
-              {alert.message}
-            </Alert>
-          </Snackbar>
+          <img src='/images/banners/login-banner.jpg' width="100%" height="100%" />
+
         </Box>
-      </Box>
+      ) : null}
+      <RightWrapper>
+        <Box
+          sx={{
+            p: [6, 12],
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Box sx={{ width: '100%', maxWidth: 400 }}>
+            <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              {/* ... */}
+            </svg>
+            <Box sx={{ my: 6 }}>
+              <Typography variant='h3' sx={{ mb: 1.5 }}>
+                Create an account
+              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Make your app management easy and fun!</Typography>
+            </Box>
+            <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+              <CustomTextField
+                autoFocus
+                fullWidth
+                sx={{ mb: 4 }}
+                label='Nom'
+                placeholder=''
+                name='firstName'
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+              <CustomTextField
+                autoFocus
+                fullWidth
+                sx={{ mb: 4 }}
+                label='Prénom'
+                placeholder=''
+                name='lastName'
+                value={formData.lastName}
+                onChange={handleChange}
+              />
+              <CustomTextField
+                fullWidth
+                label='Email'
+                sx={{ mb: 4 }}
+                placeholder='user@email.com'
+                name='email'
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <CustomTextField
+                autoFocus
+                fullWidth
+                sx={{ mb: 4 }}
+                label='Phone'
+                placeholder=''
+                name='phoneNumber'
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+              <CustomTextField
+                fullWidth
+                label='Password'
+                id='auth-login-v2-password'
+                type='password'
+                sx={{ mb: 4 }}
+                placeholder='********'
+                name='password'
+                value={formData.password}
+                onChange={handleChange}
+              />
+              {/* <BorderLinearProgress variant="determinate" value={50} /> */}
+              <CustomTextField
+                autoFocus
+                fullWidth
+                sx={{ mb: 4 }}
+                label='Entreprise'
+                placeholder=''
+                name='entreprise'
+                value={formData.entreprise.name}
+                onChange={handleChange}
+              />
+              <CustomTextField
+                autoFocus
+                fullWidth
+                sx={{ mb: 4 }}
+                label='Country'
+                placeholder=''
+                name='country'
+                value={formData.country}
+                onChange={handleChange}
+              />
+              <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }}>
+                Sign up
+              </Button>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <Typography sx={{ color: 'text.secondary', mr: 2 }}>Already have an account?</Typography>
+                <Typography component={LinkStyled} href='/login'>
+                  Sign in instead
+                </Typography>
+              </Box>
+
+
+              <Snackbar
+                open={alert.open}
+                autoHideDuration={6000}
+                onClose={() => setAlert((prevState) => ({ ...prevState, open: false }))}
+                style={{ zIndex: 1500 }}
+              >
+                <Alert onClose={() => setAlert((prevState) => ({ ...prevState, open: false }))} severity={alert.severity} variant="filled">
+                  {alert.message}
+                </Alert>
+              </Snackbar>
+
+            </form>
+          </Box>
+        </Box>
+      </RightWrapper>
+    </Box>
   )
 }
+
+const RightWrapper = styled(Box)(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: 450
+  },
+  [theme.breakpoints.up('lg')]: {
+    maxWidth: 600
+  },
+  [theme.breakpoints.up('xl')]: {
+    maxWidth: 750
+  }
+}))
+
+Register.getLayout = (page) => <BlankLayout>{page}</BlankLayout>
+Register.guestGuard = true
 
 export default Register

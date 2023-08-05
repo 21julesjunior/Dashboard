@@ -68,7 +68,7 @@ const defaultValues = {
   username: '',
 }
 
-const SidebarAddUser = props => {
+const AddProductDrawer = props => {
   // ** Props
   const { open, toggle } = props
 
@@ -92,56 +92,33 @@ const SidebarAddUser = props => {
     resolver: yupResolver(schema)
   })
 
-  const { logout, user } = useAuth()
 
-
-  const { auth, token } = useContext(AuthContext)
+  const { token } = useContext(AuthContext)
 
   const onSubmit = async data => {
-    if (store.allData.some(u => u.email === data.email || u.username === data.username)) {
-      store.allData.forEach(u => {
-        if (u.email === data.email) {
-          setError('email', {
-            message: 'Email already exists!'
-          })
-        }
-        if (u.username === data.username) {
-          setError('username', {
-            message: 'Username already exists!'
-          })
-        }
-      })
-    } else {
-      // Prepare data to be sent
-      const requestData = {
-        email: data.email,
-        fullName: data.fullName,
-        username: data.username,
-        role: role
-      };
+    // Préparez les données à envoyer
+    const productData = {
+      name: data.name,
+      description: data.description,
+      price: data.price
+    };
 
-      // Add API call here
-      try {
-        const response = await axios.post(
-          `https://dyinvoice-backend-production.up.railway.app/v1/user/1/team`,
-          requestData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        console.log('Email sent:', response);
-      } catch (error) {
-        console.error('Failed to send email:', error);
-      }
+    try {
+      // Faites une requête POST à votre API pour créer un nouveau produit
+      const response = await axios.post(`/v1/user/${props.appUserId}/product/createProduct`, productData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-      dispatch(addUser(requestData))
-      toggle()
-      reset()
+      // Mettez à jour le state de votre application avec le nouveau produit
+      dispatch(addProduct(response.data));
+      toggle();
+      reset();
+    } catch (error) {
+      console.error('Failed to create product:', error);
     }
-  }
-
+  };
 
 
   const handleClose = () => {
@@ -242,4 +219,4 @@ const SidebarAddUser = props => {
   )
 }
 
-export default SidebarAddUser
+export default AddProductDrawer

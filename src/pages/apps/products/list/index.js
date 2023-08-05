@@ -13,8 +13,6 @@ import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
 import { DataGrid } from '@mui/x-data-grid'
 
 // ** Icon Imports
@@ -26,7 +24,6 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import CustomTextField from 'src/@core/components/mui/text-field'
 import CardStatsHorizontalWithDetails from 'src/@core/components/card-statistics/card-stats-horizontal-with-details'
 
 // ** Utils Import
@@ -40,7 +37,7 @@ import axios from 'axios'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/apps/products/list/ProductTableHeader'
-import AddUserDrawer from 'src/views/apps/products/list/AddProductDrawer'
+import AddProductDrawer from 'src/views/apps/products/list/AddProductDrawer'
 
 // ** renders client column
 const userRoleObj = {
@@ -221,12 +218,18 @@ const columns = [
   }
 ]
 
-const UserList = ({ apiData }) => {
+const ProductList = ({ apiData }) => {
+
+  const userData = JSON.parse(window.localStorage.getItem('userData'));
+
+  // Extract the user ID
+  const appUserId = userData.id;
+
   // ** State
-  const [role, setRole] = useState('')
-  const [plan, setPlan] = useState('')
+  const [role] = useState('')
+  const [plan] = useState('')
   const [value, setValue] = useState('')
-  const [status, setStatus] = useState('')
+  const [status] = useState('')
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
@@ -248,14 +251,6 @@ const UserList = ({ apiData }) => {
     setValue(val)
   }, [])
 
-  const handleRoleChange = useCallback(e => {
-    setRole(e.target.value)
-  }, [])
-
-
-  const handleStatusChange = useCallback(e => {
-    setStatus(e.target.value)
-  }, [])
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
 
   return (
@@ -275,8 +270,6 @@ const UserList = ({ apiData }) => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-         
-
           <Divider sx={{ m: '0 !important' }} />
           <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
           <DataGrid
@@ -292,10 +285,10 @@ const UserList = ({ apiData }) => {
         </Card>
       </Grid>
 
-      <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <AddProductDrawer appUserId={appUserId} open={addUserOpen} toggle={toggleAddUserDrawer} />
     </Grid>
   )
 }
 
 
-export default UserList
+export default ProductList
