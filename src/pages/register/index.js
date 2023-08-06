@@ -59,7 +59,7 @@ const Register = () => {
     email: '',
     phoneNumber: '',
     password: '',
-    entreprise: '',
+    entrepriseName: '',
     country: ''
   })
 
@@ -266,8 +266,8 @@ const Register = () => {
                 sx={{ mb: 4 }}
                 label='Entreprise'
                 placeholder=''
-                name='entreprise'
-                value={formData.entreprise.name}
+                name='entrepriseName'
+                value={formData.entrepriseName}
                 onChange={handleChange}
               />
               <CustomTextField
