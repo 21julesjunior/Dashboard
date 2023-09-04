@@ -32,13 +32,13 @@ const TableHeader = props => {
         <CustomTextField
           value={value}
           sx={{ mr: 4 }}
-          placeholder='Search User'
+          placeholder='Rechercher un client'
           onChange={e => handleFilter(e.target.value)}
         />
 
         <Button onClick={toggle} variant='contained' sx={{ '& svg': { mr: 2 } }}>
           <Icon fontSize='1.125rem' icon='tabler:plus' />
-          Inviter un nouvel utilisateur 
+        Ajouter un client
         </Button>
       </Box>
     </Box>

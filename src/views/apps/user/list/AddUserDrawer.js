@@ -70,7 +70,7 @@ const defaultValues = {
 
 const SidebarAddUser = props => {
   // ** Props
-  const { open, toggle } = props
+  const { open, toggle, onProductAdded } = props;  // Ajout de onProductAdded
 
   // ** State
   const [role, setRole] = useState('subscriber')
@@ -110,6 +110,9 @@ const SidebarAddUser = props => {
             message: 'Username already exists!'
           })
         }
+        if (response.status === 200) {
+          onProductAdded(data);  // Appeler la fonction passée en prop
+        }
       })
     } else {
       // Prepare data to be sent
@@ -123,7 +126,7 @@ const SidebarAddUser = props => {
       // Add API call here
       try {
         const response = await axios.post(
-          `https://dyinvoice-backend-production.up.railway.app/v1/user/1/team`,
+          `https://dyinvoice-backend-production.up.railway.app/v1/user/2/team`,
           requestData,
           {
             headers: {

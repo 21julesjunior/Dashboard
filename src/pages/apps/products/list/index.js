@@ -193,7 +193,7 @@ const columns = [
   {
     flex: 0.1,
     minWidth: 110,
-    field: 'price',
+    field: 'honorary',
     headerName: 'Price',
     renderCell: ({ row }) => {
       return (
@@ -219,11 +219,7 @@ const columns = [
 ]
 
 const ProductList = ({ apiData }) => {
-
-  const userData = JSON.parse(window.localStorage.getItem('userData'));
-
-  // Extract the user ID
-  const appUserId = userData.id;
+  const [products, setProducts] = useState([]);  // Ajout de l'état pour les produits
 
   // ** State
   const [role] = useState('')
@@ -251,23 +247,15 @@ const ProductList = ({ apiData }) => {
     setValue(val)
   }, [])
 
+  const handleProductAdded = (newProduct) => {
+    setProducts([...products, newProduct]);
+  }
+
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
 
   return (
     <Grid container spacing={6.5}>
-      <Grid item xs={12}>
-        {apiData && (
-          <Grid container spacing={6}>
-            {apiData.statsHorizontalWithDetails.map((item, index) => {
-              return (
-                <Grid item xs={12} md={3} sm={6} key={index}>
-                  <CardStatsHorizontalWithDetails {...item} />
-                </Grid>
-              )
-            })}
-          </Grid>
-        )}
-      </Grid>
+      
       <Grid item xs={12}>
         <Card>
           <Divider sx={{ m: '0 !important' }} />
@@ -275,7 +263,7 @@ const ProductList = ({ apiData }) => {
           <DataGrid
             autoHeight
             rowHeight={62}
-            rows={store.data}
+            rows={products}  // Utilisation de l'état des produits
             columns={columns}
             disableRowSelectionOnClick
             pageSizeOptions={[10, 25, 50]}
@@ -285,7 +273,7 @@ const ProductList = ({ apiData }) => {
         </Card>
       </Grid>
 
-      <AddProductDrawer appUserId={appUserId} open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <AddProductDrawer open={addUserOpen} toggle={toggleAddUserDrawer} onProductAdded={handleProductAdded} />  // Ajout de onProductAdded
     </Grid>
   )
 }

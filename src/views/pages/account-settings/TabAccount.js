@@ -1,5 +1,7 @@
 // ** React Imports
 import { useState } from 'react'
+import axios from 'axios';
+
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -36,13 +38,25 @@ import { useForm, Controller } from 'react-hook-form'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import { use } from 'i18next'
+
+const updateUserDetails = async (updatedData) => {
+  try {
+    const response = await axios.put(`https://dyinvoice-backend-production.up.railway.app/v1/user/1`, updatedData);
+
+    if (response.status === 200) {
+      console.log("User details updated successfully", response.data);
+    } else {
+      console.error("Failed to update user details", response.data);
+    }
+  } catch (error) {
+    console.error("There was an error updating the user details", error);
+  }
+}
+
+
 
 const initialData = {
-  state: '',
-  number: '',
-  address: '',
-  zipCode: '',
+
   lastName: 'Doe',
   currency: 'usd',
   firstName: 'John',
@@ -53,29 +67,6 @@ const initialData = {
   email: 'john.doe@example.com'
 }
 
-const ImgStyled = styled('img')(({ theme }) => ({
-  width: 100,
-  height: 100,
-  marginRight: theme.spacing(6),
-  borderRadius: theme.shape.borderRadius
-}))
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    textAlign: 'center'
-  }
-}))
-
-const ResetButtonStyled = styled(Button)(({ theme }) => ({
-  marginLeft: theme.spacing(4),
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    marginLeft: 0,
-    textAlign: 'center',
-    marginTop: theme.spacing(2)
-  }
-}))
 
 const TabAccount = () => {
   // ** State
@@ -102,25 +93,9 @@ const TabAccount = () => {
     setSecondDialogOpen(true)
   }
 
-  const handleInputImageChange = file => {
-    const reader = new FileReader()
-    const { files } = file.target
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result)
-      reader.readAsDataURL(files[0])
-      if (reader.result !== null) {
-        setInputValue(reader.result)
-      }
-    }
-  }
-
-  const handleInputImageReset = () => {
-    setInputValue('')
-    setImgSrc('/images/avatars/15.png')
-  }
 
   const handleFormChange = (field, value) => {
-    setFormData({ ...formData, [field]: value })
+    setFormData({ ...formData, [field]: value });
   }
 
   const { user } = useAuth()
@@ -142,23 +117,7 @@ const TabAccount = () => {
                 >
                   {getInitials(`${user.firstName} ${user.lastName}`)}
                 </CustomAvatar>
-                <div>
-                  <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
-                    Upload New Photo
-                    <input
-                      hidden
-                      type='file'
-                      value={inputValue}
-                      accept='image/png, image/jpeg'
-                      onChange={handleInputImageChange}
-                      id='account-settings-upload-image'
-                    />
-                  </ButtonStyled>
-                  <ResetButtonStyled color='secondary' variant='tonal' onClick={handleInputImageReset}>
-                    Reset
-                  </ResetButtonStyled>
-                  <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
-                </div>
+
               </Box>
             </CardContent>
             <Divider />
@@ -168,7 +127,7 @@ const TabAccount = () => {
                   <CustomTextField
                     fullWidth
                     label='First Name'
-                    value={user.firstName}
+                    placeholder={user.firstName}
                     onChange={e => handleFormChange('firstName', e.target.value)}
                   />
                 </Grid>
@@ -176,8 +135,7 @@ const TabAccount = () => {
                   <CustomTextField
                     fullWidth
                     label='Last Name'
-                    placeholder='Doe'
-                    value={user.lastName}
+                    placeholder={user.lastName}
                     onChange={e => handleFormChange('lastName', e.target.value)}
                   />
                 </Grid>
@@ -186,18 +144,16 @@ const TabAccount = () => {
                     fullWidth
                     type='email'
                     label='Email'
-                    value={user.email}
-                    placeholder='john.doe@example.com'
+                    placeholder={user.email}
                     onChange={e => handleFormChange('email', e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
                     fullWidth
-                    label='Organization'
-                    placeholder='Pixinvent'
-                    value={user.entreprise.name}
-                    onChange={e => handleFormChange('organization', e.target.value)}
+                    label='Entreprise'
+                    placeholder={user.entreprise}
+                    onChange={e => handleFormChange('entreprise', e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -205,8 +161,8 @@ const TabAccount = () => {
                     fullWidth
                     type='number'
                     label='Phone Number'
-                    value={user.umber}
-                    placeholder='202 555 0111'
+
+                    placeholder={user.phoneNumber}
                     onChange={e => handleFormChange('number', e.target.value)}
                     InputProps={{ startAdornment: <InputAdornment position='start'></InputAdornment> }}
                   />
@@ -220,25 +176,18 @@ const TabAccount = () => {
                     onChange={e => handleFormChange('address', e.target.value)}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
-                    fullWidth
-                    label='State'
-                    placeholder='California'
-                    value={formData.state}
-                    onChange={e => handleFormChange('state', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    fullWidth
+                    fullWidth 
                     type='number'
                     label='Zip Code'
-                    placeholder='231465'
+                    placeholder='69000'
                     value={formData.zipCode}
                     onChange={e => handleFormChange('zipCode', e.target.value)}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
                     select
@@ -250,18 +199,18 @@ const TabAccount = () => {
                       onChange: e => handleFormChange('country', e.target.value)
                     }}
                   >
-                    <MenuItem value='australia'>Australia</MenuItem>
-                    <MenuItem value='canada'>Canada</MenuItem>
+                    <MenuItem value='benin'>Bénin</MenuItem>
+                    <MenuItem value='cameroon'>Cameroon</MenuItem>
+                    <MenuItem value='cote-divoire'>Côte d'ivoire</MenuItem>
                     <MenuItem value='france'>France</MenuItem>
-                    <MenuItem value='united-kingdom'>United Kingdom</MenuItem>
-                    <MenuItem value='united-states'>United States</MenuItem>
                   </CustomTextField>
                 </Grid>
 
                 <Grid item xs={12} sx={{ pt: theme => `${theme.spacing(6.5)} !important` }}>
-                  <Button variant='contained' sx={{ mr: 4 }}>
+                  <Button variant='contained' sx={{ mr: 4 }} onClick={() => updateUserDetails(formData)}>
                     Save Changes
                   </Button>
+
                   <Button type='reset' variant='tonal' color='secondary' onClick={() => setFormData(initialData)}>
                     Reset
                   </Button>

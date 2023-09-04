@@ -50,22 +50,17 @@ const Header = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between'
 }))
 
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  fullName: yup
-    .string()
-    .min(3, obj => showErrors('First Name', obj.value.length, obj.min))
-    .required(),
-  username: yup
-    .string()
-    .min(3, obj => showErrors('Username', obj.value.length, obj.min))
-    .required()
-})
+const productSchema = yup.object().shape({
+  name: yup.string().required(),
+  description: yup.string().required(),
+  honorary: yup.number().required()
+});
+
 
 const defaultValues = {
-  email: '',
-  fullName: '',
-  username: '',
+  name: '',
+  description: '',
+  honorary: '',
 }
 
 const AddProductDrawer = props => {
@@ -89,34 +84,40 @@ const AddProductDrawer = props => {
   } = useForm({
     defaultValues,
     mode: 'onChange',
-    resolver: yupResolver(schema)
-  })
+    resolver: yupResolver(productSchema)
+  });
 
+  // const { token } = useContext(AuthContext)
 
-  const { token } = useContext(AuthContext)
 
   const onSubmit = async data => {
     // Préparez les données à envoyer
-    const productData = {
+    const token = localStorage.getItem('token');
+
+    const requestData = {
+      id: 0,
       name: data.name,
       description: data.description,
-      price: data.price
+      honorary: data.honorary
     };
-
+  
     try {
-      // Faites une requête POST à votre API pour créer un nouveau produit
-      const response = await axios.post(`/v1/user/${props.appUserId}/product/createProduct`, productData, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.post(
+        'https://dyinvoice-backend-production.up.railway.app/v1/user/2/prestation/createPrestation',
+        requestData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
-
-      // Mettez à jour le state de votre application avec le nouveau produit
-      dispatch(addProduct(response.data));
-      toggle();
-      reset();
+      );
+  
+      if (response.status === 200) {
+        // Mettre à jour le tableau de produits ou faire d'autres actions
+        console.log('Produit créé avec succès:', response.data);
+      }
     } catch (error) {
-      console.error('Failed to create product:', error);
+      console.error('Échec de la création du produit:', error);
     }
   };
 
@@ -190,14 +191,14 @@ const AddProductDrawer = props => {
           />
 
           <Controller
-            name='price'
+            name='honorary'
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
                 type='number'
-                label='Price'
+                label='honorary'
                 value={value}
                 sx={{ mb: 4 }}
                 onChange={onChange}
